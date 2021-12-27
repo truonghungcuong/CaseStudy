@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="garbage.js"></script>
+    <script src="trash.js"></script>
+    <script src="boom.js"></script>
+</head>
+<body>
+<canvas id="myCanvas" width="500px" height="800px" style="border: 1px solid black"></canvas>
+<script>
+    let canvas = document.getElementById("myCanvas");
+    let ctx = canvas.getContext("2d");
+    let myGarbage = new Garbage(230, 750, 100, 50, 30, 'img/garbage.png');
+    let trash = new Trash(100, 0, 50, 40, 'img/trash.png', 5);
+    let boom = new Boom(200, 0, 50, 40, 'img/bomb (1).png', 2.5)
+    let boom2 = new Boom(250, 50, 50, 40, 'img/bomb (1).png', Math.random()*4)
+    let intervalId = -1;
+    let score = 0;
+    let image = new Image();
+    image.src = 'img/sea1.png';
+    trash.drawTrash(ctx);
+    myGarbage.drawGarbage(ctx);
+    boom.drawBoom(ctx);
+    boom2.drawBoom(ctx);
+
+    function drawImage() {
+        ctx.drawImage(image, 0, 0, 500, 800);
+    }
+
+    function moveGarbage(event) {
+        switch (event.keyCode) {
+            case 37: {
+                if (myGarbage.x < 30) {
+                    return;
+                }
+                myGarbage.moveLeft();
+                break;
+            }
+            case 39: {
+                if (myGarbage.x + myGarbage.width > 475) {
+                    return;
+                }
+                myGarbage.moveRight();
+                break;
+            }
+            case 38: {
+                myGarbage.upSpeed();
+                return;
+            }
+            case 40:{
+                myGarbage.downSpeed();
+                return;
+            }
+        }
+        updateCanvas();
+    }
+
+    function clearCanvas() {
+        ctx.clearRect(0, 0, 500, 850);
+    }
+
+    function moveBoom() {
+        boom.moveDown();
+        // boom2.moveDown();
+
+        updateCanvas();
+        if (boom.y > canvas.clientHeight) {
+            boom.y = 0;
+            boom.x = Math.random() * 450;
+        }
+        if (boom2.y > canvas.clientHeight) {
+            boom2.y = 0;
+            boom2.x = Math.random() * 450;
+        }
+        if (checkCollision()) {
+            alert("thua");
+            cancelAnimationFrame(intervalId);
+        } else {
+            intervalId = requestAnimationFrame(moveBoom);
+        }
+    }
+
+    function moveTrash() {
+        if (score >= 10) {
+            trash.speed = 7.5;
+            boom2.moveDown();
+        }
+        if (score === 20) {
+            trash.speed = 10;
+        }
+        trash.moveDown();
+        updateCanvas();
+
+        if (trash.y < myGarbage.y + myGarbage.height && trash.y + trash.height > myGarbage.y && trash.x + trash.width > myGarbage.x && trash.x < myGarbage.x + myGarbage.width) {
+            trash.y = 0;
+            trash.x = Math.random() * 450;
+            score++;
+        }
+        if (checkCollision()) {
+            alert("thua");
+            cancelAnimationFrame(intervalId);
+        } else {
+            intervalId = requestAnimationFrame(moveTrash);
+        }
+
+    }
+
+    function updateCanvas() {
+        clearCanvas();
+        drawImage();
+        drawScore();
+        trash.drawTrash(ctx);
+        myGarbage.drawGarbage(ctx);
+        boom.drawBoom(ctx);
+        boom2.drawBoom(ctx);
+    }
+
+    moveTrash()
+
+    function checkCollision() {
+        if (trash.y > myGarbage.y) {
+            return true;
+        }
+        if (boom.y < myGarbage.y + myGarbage.height && boom.y + boom.height > myGarbage.y && boom.x + boom.width > myGarbage.x && boom.x < myGarbage.x + myGarbage.width) {
+            return true;
+        }
+    }
+
+    function drawScore() {
+        ctx.fillStyle = "blue";
+        ctx.font = "bold 16px Arial";
+        ctx.fillText("Score:" + score, 10, 20);
+    }
+
+    moveBoom()
+    document.addEventListener('keydown', moveGarbage);
+</script>
+</body>
+</html>
