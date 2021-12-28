@@ -6,6 +6,7 @@
     <script src="garbage.js"></script>
     <script src="trash.js"></script>
     <script src="boom.js"></script>
+    <script src="life.js"></script>
 </head>
 <body>
 <canvas id="myCanvas" width="500px" height="800px" style="border: 1px solid black"></canvas>
@@ -14,9 +15,11 @@
     let ctx = canvas.getContext("2d");
     let myGarbage = new Garbage(230, 750, 100, 50, 30, 'img/garbage.png');
     let trash = new Trash(100, 0, 50, 40, 'img/trash.png', 5);
-    let boom = new Boom(200, 0, 50, 40, 'img/bomb (1).png', 2.5)
-    let boom2 = new Boom(250, 50, 50, 40, 'img/bomb (1).png', Math.random()*4)
+    let boom = new Boom(200, -50, 50, 40, 'img/bomb (1).png', 2.5);
+    let boom2 = new Boom(250, -50, 50, 40, 'img/bomb (1).png',  3);
+    let life = new Life(400, 0, 35, 35, 'img/heart.png');
     let intervalId = -1;
+    let turn = 3;
     let score = 0;
     let image = new Image();
     image.src = 'img/sea1.png';
@@ -24,6 +27,7 @@
     myGarbage.drawGarbage(ctx);
     boom.drawBoom(ctx);
     boom2.drawBoom(ctx);
+    life.drawLife(ctx);
 
     function drawImage() {
         ctx.drawImage(image, 0, 0, 500, 800);
@@ -49,7 +53,7 @@
                 myGarbage.upSpeed();
                 return;
             }
-            case 40:{
+            case 40: {
                 myGarbage.downSpeed();
                 return;
             }
@@ -63,19 +67,33 @@
 
     function moveBoom() {
         boom.moveDown();
-        // boom2.moveDown();
 
         updateCanvas();
         if (boom.y > canvas.clientHeight) {
-            boom.y = 0;
+            boom.y =-50;
             boom.x = Math.random() * 450;
         }
         if (boom2.y > canvas.clientHeight) {
-            boom2.y = 0;
+            boom2.y = -50;
             boom2.x = Math.random() * 450;
         }
-        if (checkCollision()) {
+        if (checkCollisionBoom2()) {
+            alert("mất 1 mạng");
+            boom2.y = -50;
+            boom2.x = Math.random() * 450;
+            trash.y = 0;
+            trash.x = Math.random() * 450;
+        }
+        if (checkCollisionBoom()) {
+            alert("mất 1 mạng");
+            boom.y=-50;
+            boom.x=Math.random()*450;
+            trash.y = 0;
+            trash.x = Math.random() * 450;
+        }
+        if (turn === 0) {
             alert("thua");
+            updateCanvas()
             cancelAnimationFrame(intervalId);
         } else {
             intervalId = requestAnimationFrame(moveBoom);
@@ -98,8 +116,14 @@
             trash.x = Math.random() * 450;
             score++;
         }
-        if (checkCollision()) {
-            alert("thua");
+        if (checkCollisionTrash()) {
+            alert("mất 1 mạng");
+            trash.y = 0;
+            trash.x = Math.random() * 450;
+        }
+        if (turn === 0) {
+            alert("thua")
+            updateCanvas()
             cancelAnimationFrame(intervalId);
         } else {
             intervalId = requestAnimationFrame(moveTrash);
@@ -107,25 +131,46 @@
 
     }
 
+    function moveLife() {
+        updateCanvas();
+    }
+
     function updateCanvas() {
         clearCanvas();
         drawImage();
         drawScore();
+        drawTurn();
         trash.drawTrash(ctx);
         myGarbage.drawGarbage(ctx);
         boom.drawBoom(ctx);
         boom2.drawBoom(ctx);
+        life.drawLife(ctx)
     }
 
     moveTrash()
 
-    function checkCollision() {
+    function checkCollisionTrash() {
         if (trash.y > myGarbage.y) {
+            turn--;
             return true;
         }
+    }
+    function checkCollisionBoom() {
         if (boom.y < myGarbage.y + myGarbage.height && boom.y + boom.height > myGarbage.y && boom.x + boom.width > myGarbage.x && boom.x < myGarbage.x + myGarbage.width) {
+            turn--;
             return true;
         }
+    }
+    function checkCollisionBoom2(){
+        if (boom2.y < myGarbage.y + myGarbage.height && boom2.y + boom2.height > myGarbage.y && boom2.x + boom2.width > myGarbage.x && boom2.x < myGarbage.x + myGarbage.width) {
+            turn--;
+            return true;
+        }
+    }
+    function drawTurn() {
+        ctx.fillStyle = "blue";
+        ctx.font = "bold 20px Arial";
+        ctx.fillText("X" + turn, 450, 20)
     }
 
     function drawScore() {
@@ -135,6 +180,7 @@
     }
 
     moveBoom()
+    moveLife()
     document.addEventListener('keydown', moveGarbage);
 </script>
 </body>
