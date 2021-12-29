@@ -9,14 +9,15 @@
     <script src="life.js"></script>
 </head>
 <body>
-<canvas id="myCanvas" width="500px" height="800px" style="border: 1px solid black"></canvas>
+<button style="width: 100px; height: 30px" onclick="ResetGmae()">Reset Game</button>
+<div><canvas id="myCanvas" width="500px" height="800px" style="border: 1px solid black"></canvas></div>
 <script>
     let canvas = document.getElementById("myCanvas");
     let ctx = canvas.getContext("2d");
     let myGarbage = new Garbage(230, 750, 100, 50, 30, 'img/garbage.png');
-    let trash = new Trash(100, 0, 50, 40, 'img/trash.png', 5);
-    let boom = new Boom(200, -50, 50, 40, 'img/bomb (1).png', 2.5);
-    let boom2 = new Boom(250, -50, 50, 40, 'img/bomb (1).png',  3);
+    let trash = new Trash(Math.random()*450,-50, 50, 40, 'img/trash.png', 5);
+    let boom = new Boom(Math.random()*450, -50, 50, 40, 'img/bomb (1).png', 2.5);
+    let boom2 = new Boom(Math.random()*450, -50, 50, 40, 'img/bomb (1).png', Math.random()* 5);
     let life = new Life(400, 0, 35, 35, 'img/heart.png');
     let intervalId = -1;
     let turn = 3;
@@ -177,6 +178,9 @@
         ctx.fillStyle = "blue";
         ctx.font = "bold 16px Arial";
         ctx.fillText("Score:" + score, 10, 20);
+    }
+    function ResetGmae(){
+        location.reload();
     }
 
     moveBoom()
