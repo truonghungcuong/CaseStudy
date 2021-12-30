@@ -35,7 +35,7 @@
 </style>
 <div style="text-align: center">
     <button style=" width: 150px; height: 40px; background: greenyellow" onclick="ResetGmae()">Reset Game</button>
-
+    <button style=" width: 150px;height: 40px; background: greenyellow" onclick="clearHighscore()">Clear High Score </button>
 </div>
 <div class="container">
     <canvas id="myCanvas" width="500px" height="800px" style="border: 1px solid black"></canvas>
@@ -132,6 +132,11 @@
         }
         if (turn === 0) {
             GameOver();
+            if (localStorage.getItem('highScore') < score) {
+                localStorage.setItem('highScore', score);
+                let name = prompt("Nhập tên");
+                localStorage.setItem('name', name);
+            }
             // cancelAnimationFrame(intervalId);
         } else {
             intervalId = requestAnimationFrame(moveBoom);
@@ -143,10 +148,10 @@
             trash.speed = 7.5;
             boom2.moveDown();
         }
-        if (score === 20) {
+        if (score >= 20) {
             trash.speed = 10;
         }
-        if (score === 50) {
+        if (score >= 50) {
             trash.speed = 15;
         }
         trash.moveDown();
@@ -169,6 +174,11 @@
         }
         if (turn === 0) {
             GameOver();
+            if (localStorage.getItem('highScore') < score) {
+                localStorage.setItem('highScore', score);
+                let name = prompt("Nhập tên");
+                localStorage.setItem('name', name);
+            }
             // cancelAnimationFrame(intervalId);
         } else {
             intervalId = requestAnimationFrame(moveTrash);
@@ -185,6 +195,7 @@
         drawImage();
         drawScore();
         drawTurn();
+        highScore();
         trash.drawTrash(ctx);
         myGarbage.drawGarbage(ctx);
         boom.drawBoom(ctx);
@@ -229,6 +240,16 @@
 
     function ResetGmae() {
         location.reload();
+    }
+
+    function highScore() {
+        ctx.fillText("Record: " + localStorage.getItem('highScore') + " by " + localStorage.getItem('name'), 150, 20)
+    }
+    function clearHighscore(){
+        window.localStorage.clear();
+        location.reload();
+        localStorage.setItem('highScore',0);
+        localStorage.setItem('name','Player')
     }
 
     moveBoom()
