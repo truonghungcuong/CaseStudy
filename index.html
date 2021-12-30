@@ -107,11 +107,11 @@
         boom.moveDown();
 
         updateCanvas();
-        if (boom.y > canvas.clientHeight) {
+        if (boom.y > 800) {
             boom.y = -50;
             boom.x = Math.random() * 450;
         }
-        if (boom2.y > canvas.clientHeight) {
+        if (boom2.y > 800) {
             boom2.y = -50;
             boom2.x = Math.random() * 450;
             boom2.speed = Math.random() * 5;
