@@ -35,7 +35,8 @@
 </style>
 <div style="text-align: center">
     <button style=" width: 150px; height: 40px; background: greenyellow" onclick="ResetGmae()">Reset Game</button>
-    <button style=" width: 150px;height: 40px; background: greenyellow" onclick="clearHighscore()">Clear High Score </button>
+    <button style=" width: 150px;height: 40px; background: greenyellow" onclick="clearHighscore()">Clear High Score
+    </button>
 </div>
 <div class="container">
     <canvas id="myCanvas" width="500px" height="800px" style="border: 1px solid black"></canvas>
@@ -245,11 +246,12 @@
     function highScore() {
         ctx.fillText("Record: " + localStorage.getItem('highScore') + " by " + localStorage.getItem('name'), 150, 20)
     }
-    function clearHighscore(){
+
+    function clearHighscore() {
         window.localStorage.clear();
         location.reload();
-        localStorage.setItem('highScore',0);
-        localStorage.setItem('name','Player')
+        localStorage.setItem('highScore', 0);
+        localStorage.setItem('name', 'Player')
     }
 
     moveBoom()
