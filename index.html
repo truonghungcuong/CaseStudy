@@ -55,6 +55,7 @@
     let score = 0;
     let image = new Image();
     let image1 = new Image();
+    let isGameover = false;
     image1.src = 'img/game-over.png';
     image.src = 'img/sea1.png';
     trash.drawTrash(ctx);
@@ -69,9 +70,11 @@
 
     function drawImage() {
         ctx.drawImage(image, 0, 0, 500, 800);
+        isGameover = true;
     }
 
     function moveGarbage(event) {
+        if (!isGameover) {
         switch (event.keyCode) {
             case 37: {
                 if (myGarbage.x < 0) {
@@ -97,6 +100,7 @@
             }
         }
         updateCanvas();
+        }
     }
 
     function clearCanvas() {
