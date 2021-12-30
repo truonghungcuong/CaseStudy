@@ -66,40 +66,40 @@
 
     function GameOver() {
         ctx.drawImage(image1, 170, 350, 200, 200)
+        isGameover = true;
     }
 
     function drawImage() {
         ctx.drawImage(image, 0, 0, 500, 800);
-        isGameover = true;
     }
 
     function moveGarbage(event) {
         if (!isGameover) {
-        switch (event.keyCode) {
-            case 37: {
-                if (myGarbage.x < 0) {
+            switch (event.keyCode) {
+                case 37: {
+                    if (myGarbage.x < 0) {
+                        return;
+                    }
+                    myGarbage.moveLeft();
+                    break;
+                }
+                case 39: {
+                    if (myGarbage.x + myGarbage.width > 475) {
+                        return;
+                    }
+                    myGarbage.moveRight();
+                    break;
+                }
+                case 38: {
+                    myGarbage.upSpeed();
                     return;
                 }
-                myGarbage.moveLeft();
-                break;
-            }
-            case 39: {
-                if (myGarbage.x + myGarbage.width > 475) {
+                case 40: {
+                    myGarbage.downSpeed();
                     return;
                 }
-                myGarbage.moveRight();
-                break;
             }
-            case 38: {
-                myGarbage.upSpeed();
-                return;
-            }
-            case 40: {
-                myGarbage.downSpeed();
-                return;
-            }
-        }
-        updateCanvas();
+            updateCanvas();
         }
     }
 
